@@ -1,8 +1,9 @@
 from flask import Flask,request,jsonify
 import pickle
+import pandas as pd
 app = Flask(__name__)
 
-model = pickle.load_modle("model.pkl")
+model = pickle.load(open("model.pkl",'rb'))
 
 @app.route('/')
 def index():
@@ -11,7 +12,15 @@ def index():
 @app.route('/disease', methods=['POST'])
 def classify():
     syptoms = request.form.get('syptoms')
-    return jsonify(syptoms)
+    predicted_disease = model.predict_proba([syptoms])
+    df_norm = pd.read_csv("dis_sym_dataset_norm.csv")
+    Y = df_norm.iloc[:, 0:1]
+    k=3
+    diseases = list(set(Y['label_dis']))
+    diseases.sort()
+    topk = predicted_disease[0].argsort()[-k:][::-1]
+    result = {'disease':topk[0]}
+    return jsonify(result)
 
 
 if __name__ == '__main__':
