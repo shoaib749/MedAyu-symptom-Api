@@ -40,7 +40,7 @@ def classify():
         for idx,val in enumerate(row[0]):
             if val!=0:
                 match_sym.add(dataset_symptoms[idx])
-        prob = (len(match_sym.intersection(set(final_symp)))+1)/(len(set(final_symp))+1)
+        prob = (len(match_sym.intersection(set(syptoms)))+1)/(len(set(syptoms))+1)
         # prob *= mean(scores)
         topk_dict[t] = prob
     j = 0
