@@ -12,6 +12,7 @@ def index():
 @app.route('/disease', methods=['POST'])
 def classify():
     syptoms = request.form.get('syptoms')
+    print(syptoms)
     df_norm = pd.read_csv("dis_sym_dataset_norm.csv")
     Y = df_norm.iloc[:, 0:1]
     #added for testing: head
