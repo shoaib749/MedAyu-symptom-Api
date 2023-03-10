@@ -12,9 +12,16 @@ def index():
 @app.route('/disease', methods=['POST'])
 def classify():
     syptoms = request.form.get('syptoms')
-    predicted_disease = model.predict_proba([syptoms])
     df_norm = pd.read_csv("dis_sym_dataset_norm.csv")
     Y = df_norm.iloc[:, 0:1]
+    #added for testing: head
+    X = df_norm.iloc[:, 1:]
+    dataset_symptoms = list(X.columns)
+    sample_x = [0 for x in range(0,len(dataset_symptoms))]
+    for val in syptoms:
+        sample_x[dataset_symptoms.index(val)]=1
+    #added for testing: end
+    predicted_disease = model.predict_proba([sample_x])
     k=3
     diseases = list(set(Y['label_dis']))
     diseases.sort()
