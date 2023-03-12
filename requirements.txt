@@ -9,4 +9,4 @@ pandas
 scikit-learn
 nltk
 BeautifulSoup4
-
+requests
