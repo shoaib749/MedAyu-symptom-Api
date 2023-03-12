@@ -8,5 +8,5 @@ Werkzeug==1.0.1
 pandas
 scikit-learn
 nltk
-
+BeautifulSoup4
 
