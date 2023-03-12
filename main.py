@@ -1,10 +1,44 @@
+from bs4 import BeautifulSoup
 from flask import Flask,request,jsonify
 import pickle
 import pandas as pd
 import json
+from itertools import combinations
+import requests
+from nltk.corpus import wordnet 
+import nltk
+import operator
+from collections import Counter
+nltk.download('wordnet')
+
+
+
+    
 app = Flask(__name__)
 
 model = pickle.load(open("model.pkl",'rb'))
+##use of common files and variables for predection & symptoms
+df_norm = pd.read_csv("dis_sym_dataset_norm.csv")
+Y = df_norm.iloc[:, 0:1]
+X = df_norm.iloc[:, 1:]
+dataset_symptoms = list(X.columns)
+#End of common section
+def synonyms(term):
+    synonyms = []
+    response = requests.get('https://www.thesaurus.com/browse/{}'.format(term))
+    soup = BeautifulSoup(response.content,  "html.parser")
+    try:
+        container=soup.find('section', {'class': 'MainContentContainer'}) 
+        row=container.find('div',{'class':'css-191l5o0-ClassicContentCard'})
+        row = row.find_all('li')
+        for x in row:
+            synonyms.append(x.get_text())
+    except:
+        None
+    for syn in wordnet.synsets(term):
+        synonyms+=syn.lemma_names()
+    return set(synonyms)
+
 
 @app.route('/')
 def index():
@@ -14,11 +48,10 @@ def index():
 def classify():
     syptoms = request.form.getlist('syptoms')
     print(syptoms)
-    df_norm = pd.read_csv("dis_sym_dataset_norm.csv")
-    Y = df_norm.iloc[:, 0:1]
+    
+    
     #added for testing: head
-    X = df_norm.iloc[:, 1:]
-    dataset_symptoms = list(X.columns)
+    
     sample_x = [0 for x in range(0,len(dataset_symptoms))]
     for val in syptoms:
         sample_x[dataset_symptoms.index(val)]=1
@@ -64,6 +97,63 @@ def classify():
 
 
     return result
+
+@app.route('/EnterSymptoms',methods=['POST'])
+def Enter():
+    Symptoms = request.form.getlist('user_symtoms')
+    print(Symptoms)
+    ##taking input is the thing after converting 
+    user_symptoms = []
+    for user_sym in Symptoms:
+        user_sym = user_sym.split()
+        str_sym = set()
+        for comb in range(1, len(user_sym)+1):
+            for subset in combinations(user_sym, comb):
+                subset=' '.join(subset)
+                subset = synonyms(subset) 
+                str_sym.update(subset)
+        str_sym.add(' '.join(user_sym))
+        user_symptoms.append(' '.join(str_sym).replace('_',' '))
+    # Loop over all the symptoms in dataset and check its similarity score to the synonym string of the user-input 
+    # symptoms. If similarity>0.5, add the symptom to the final list
+    found_symptoms = set()
+    for idx, data_sym in enumerate(dataset_symptoms):
+        data_sym_split=data_sym.split()
+        for user_sym in user_symptoms:
+            count=0
+            for symp in data_sym_split:
+                if symp in user_sym.split():
+                    count+=1
+            if count/len(data_sym_split)>0.5:
+                found_symptoms.add(data_sym)
+    found_symptoms = list(found_symptoms)
+    result = json.dumps({'result':found_symptoms})
+    return result
+# returns the list of synonyms of the input word from thesaurus.com (https://www.thesaurus.com/) and wordnet (https://www.nltk.org/howto/wordnet.html)
+
+
+##code starting for user selection me symptoms from the db
+@app.route('/db',methods=['POST'])
+def db():
+    symptoms = request.form.getlist('request')
+    dis_list = set() 
+    counter_list = []           
+    for symp in symptoms:
+        dis_list.update(set(df_norm[df_norm[symp]==1]['label_dis']))
+
+    for dis in dis_list:
+        row = df_norm.loc[df_norm['label_dis'] == dis].values.tolist()
+        row[0].pop(0)
+        for idx,val in enumerate(row[0]):
+            if val!=0 and dataset_symptoms[idx] not in symptoms:
+                counter_list.append(dataset_symptoms[idx])
+    # Symptoms that co-occur with the ones selected by user              
+    dict_symp = dict(Counter(counter_list))
+    dict_symp_tup = sorted(dict_symp.items(), key=operator.itemgetter(1),reverse=True)   
+    # print(dict_symp_tup) 
+    result = json.dumps({'result':dict_symp_tup})
+    return result
+
 
 
 if __name__ == '__main__':
