@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstra links -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>MedAyu</title>
+    <style>
+        /* *{
+            margin: 10px;
+            padding: 10px;               
+        } */
+    </style>
+</head>
+
+<body style="background-image: url('./5333978.jpg') ;
+background-size: cover; background-repeat: no-repeat;">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+                <a class="navbar-brand" href="#">
+                    <img src="https://raw.githubusercontent.com/shoaib749/MiniProject/master/app/src/main/res/drawable/logoicon10.png"
+                        alt="" width="30" height="30" class="d-inline-block align-text-top">
+                    MedAyu
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Header end -->
+    <!-- <h2 style=" display: flex; align-items: center "> MedAyu</h2> -->
+
+    <!-- Background -->
+    <!-- <div class="bg-image" > -->
+
+    <!-- background end -->
+    <!-- Form Start -->
+
+
+    <div class="container  p-3 display-flex shadow p-3 mb-5 bg-body rounded"
+        style="height: 60vh; width: 50vw; margin-top: 60px; opacity: 0.8; ">
+        <form name="userSymptomsForm" method="post" onsubmit=validateForm()>
+            <div class="form-floating  mb-3 ">
+                <input type="text" class="form-control" id="Symptoms_1" placeholder="">
+                <label for="floatingInput">Symptom</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="Symptoms_2" placeholder="">
+                <label for="floatingPassword">Symptom</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="Symptoms_3" placeholder="">
+                <label for="floatingPassword">Symptom</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="Symptoms_4" placeholder="">
+                <label for="floatingPassword">Symptom</label>
+            </div>
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <button class="btn btn-success" type="button" value="submit" onclick="SubmitData()">Submit</button>
+            </div>
+        </form>
+
+        <!-- button -->
+
+    </div>
+
+    <!-- Form End -->
+    <!-- Bootstrap scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script>
+        function SubmitData() {
+            let symptomsarray = [];
+            var symptom_1 = document.getElementById("Symptoms_1").value;
+            var symptom_2 = document.getElementById("Symptoms_2").value;
+            var symptom_3 = document.getElementById("Symptoms_3").value;
+            var symptom_4 = document.getElementById("Symptoms_4").value;
+
+            //    console.log(symptom_2);
+            i = 0;
+            if (symptom_1.length != 0) {
+                symptomsarray[i] = symptom_1;
+                i++;
+            }
+            if (symptom_2.length != 0) {
+                symptomsarray[i] = symptom_2;
+                i++;
+            }
+            if (symptom_3.length != 0) {
+                symptomsarray[i] = symptom_3;
+                i++;
+            }
+            if (symptom_4.length != 0) {
+                symptomsarray[i] = symptom_4;
+                i++;
+            }
+            console.log(symptomsarray);
+            const apicall = async () => {
+            const response = await fetch('https://web-production-aeed.up.railway.app/EnterSymptoms', {
+                method: 'POST',
+                body: JSON.stringify({
+                    user_symtoms: symptomsarray
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const myjson = await response.json();
+            console.log(response);
+        }
+        try {
+            apicall();
+        } catch {
+            console.log("Error in api call");
+        }
+        }
+        //creating api request
+        
+        
+    </script>
+
+</body>
+
+</html>

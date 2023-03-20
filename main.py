@@ -42,7 +42,8 @@ def synonyms(term):
 
 @app.route('/')
 def index():
-    return "Mini project MedAyu symptoms api: 1. /EnterSymptoms using POST Method & params:user_symtoms(Array) 2. /db using POST method with params:request 3. /disease Using POST method & params:syptoms "
+    # return "Mini project MedAyu symptoms api: 1. /EnterSymptoms using POST Method & params:user_symtoms(Array) 2. /db using POST method with params:request 3. /disease Using POST method & params:syptoms "
+     render_template('./web/index.html', content="MedAyu")
 
 @app.route('/disease', methods=['POST'])
 def classify():
@@ -88,13 +89,7 @@ def classify():
         j += 1
     result = json.dumps({'result':result_disease})
     
-    
-    
     #code end
-    
-
-
-
 
     return result
 
