@@ -48,12 +48,12 @@ def index():
 def check():
     return render_template('check.html')
 
-@app.route('/coSymptoms.html/')
+@app.route('/check.html/coSymptoms.html/')
 def co():
     return render_template('coSymptoms.html')
 
 
-@app.route('/result.html/')
+@app.route('/check.html/coSymptoms.html/result.html/')
 def result():
     return render_template('result.html')
 
