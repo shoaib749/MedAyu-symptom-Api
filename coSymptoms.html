@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Bootstra links -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedAyu</title>
+</head>
+
+<body style="background-image: url('./5333978.jpg') ;
+background-size: cover; background-repeat: no-repeat;">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+                <a class="navbar-brand" href="#">
+                    <img src="https://raw.githubusercontent.com/shoaib749/MiniProject/master/app/src/main/res/drawable/logoicon10.png"
+                        alt="" width="30" height="30" class="d-inline-block align-text-top">
+                    MedAyu
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Header  -->
+
+    <div class="container p-3 display-flex shadow p-3 mb-5 bg-body rounded"
+        style="height: auto; width: 50vw; margin-top: 60px; opacity: 0.8; ">
+        <div class="container">
+            <h4>Select Co-Occuring Symptoms</h4>
+        </div>
+        <div id="container" class="container mb-5 p-3">
+        </div>
+        <div class="d-grid gap-2 col-6 mx-auto" style="margin-top: 125px;">
+            <button class="btn btn-success" type="button" value="submit" onclick="SubmitData()">Submit</button>
+        </div>
+    </div>
+
+    <!-- start of script -->
+    <script>
+        // var testArray = ['cold', 'fever', 'headache', 'vomitting', 'red eyes'];
+        var testArray = JSON.parse(window.localStorage.getItem("check"));
+        // console.log("array")
+        // console.log();
+        console.log(testArray);
+        testArray.forEach(element => {
+            console.log(element);
+            var checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = element;
+            checkbox.value = element;
+            checkbox.classList = "form-check-input";
+
+            var label = document.createElement('label');
+            // label.htmlFor = element;
+            label.appendChild(document.createTextNode("   " + element));
+            label.className = "form-check-label";
+            var br = document.createElement('br');
+
+            //customer bootstarap after added
+            var innercontainer = document.createElement('div');
+            innercontainer.id = "inner" + element;
+            innercontainer.className = "form-check";
+            innercontainer.appendChild(checkbox);
+            innercontainer.appendChild(label);
+
+            var container = document.getElementById('container');
+            container.appendChild(innercontainer);
+            
+        });
+        function SubmitData() {
+            var symptomsarray = [];
+            var i = 0;
+            testArray.forEach(element => {
+                var checkbox = document.getElementById(element);
+                if (checkbox.checked == true) {
+                    symptomsarray[i] = element;
+                    i++;
+                }
+            });
+            if (i != 0) {
+                console.log("cehcked data " + symptomsarray);
+                window.localStorage.setItem("co", JSON.stringify(symptomsarray));
+                console.log("this is local data stored")
+                console.log(window.localStorage.getItem("co"));
+                const apiCall = async () => {
+                    const response = await fetch('https://web-production-aeed.up.railway.app/db', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            request: symptomsarray
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    const myjson = await response.json();
+                    console.log("Data from Api");
+                    console.log(myjson);
+                    window.localStorage.setItem("db", JSON.stringify(myjson));
+                }
+                try {
+                    apiCall();
+                    window.location.href='./result.html';
+                } catch {
+                    console.log("Error in api call");
+                }
+
+            } else {
+                alert("Select atleast 1 co-occuring symptoms");
+            }
+
+
+        }
+
+        // console.log(window.localStorage.getItem("apiSymptoms"));
+    </script>
+    <!-- end of script -->
+</body>
+
+
+
+</html>

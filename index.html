@@ -14,7 +14,6 @@
             margin: 10px;
             padding: 10px;               
         } */
-        
     </style>
 </head>
 
@@ -79,27 +78,37 @@ background-size: cover; background-repeat: no-repeat;">
 
 
     <div class="container  p-3 display-flex shadow p-3 mb-5 bg-body rounded"
-        style="height: 60vh; width: 50vw; margin-top: 60px; opacity: 0.8; ">
+        style="height: auto; width: 50vw; margin-top: 60px; opacity: 0.8; ">
         <form name="userSymptomsForm" method="post" onsubmit=validateForm()>
-            <div class="form-floating  mb-3 ">
+            <!-- <div class="form-floating  mb-3 ">
                 <input type="text" class="form-control" id="Symptoms_1" placeholder="">
-                <label for="floatingInput">Symptom</label>
+                <label for="Symptoms_1">Symptom</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="Symptoms_2" placeholder="">
-                <label for="floatingPassword">Symptom</label>
+                <label for="Symptoms_2">Symptom</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="Symptoms_3" placeholder="">
-                <label for="floatingPassword">Symptom</label>
+                <label for="Symptoms_3">Symptom</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="Symptoms_4" placeholder="">
-                <label for="floatingPassword">Symptom</label>
+                <label for="Symptoms_4">Symptom</label>
+            </div> -->
+            <div id="inputForm">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="0" placeholder="name@example.com" required>
+                    <label for="0">Symptom</label>
+                </div>
             </div>
-            <div class="d-grid gap-2 col-6 mx-auto">
+
+            <!-- <div class="d-grid gap-2 col-6 mx-auto">
                 <button class="btn btn-success" type="button" value="submit" onclick="SubmitData()">Submit</button>
-            </div>
+            </div> -->
+            <button type="button" class="btn btn-primary btn" onclick="addInput()">Add</button>
+            <button type="button" class="btn btn-success btn" value="submit" onclick="SubmitData()">Submit</button>
+
         </form>
 
         <!-- button -->
@@ -113,54 +122,78 @@ background-size: cover; background-repeat: no-repeat;">
         crossorigin="anonymous"></script>
 
     <script>
+        var i = 1;
+        function addInput() {
+            var input = document.createElement('input');
+            input.id = i;
+            input.type = "text";
+            input.className = "form-control";
+            input.placeholder = "symtoms";
+
+            var label = document.createElement("label");
+            label.id = "lable_" + i;
+            label.htmlFor = i;
+            label.appendChild(document.createTextNode("Symptom"));
+
+            var innerContainer = document.createElement('div');
+            innerContainer.id = "inner_" + i;
+            innerContainer.className = "form-floating mb-3"
+            innerContainer.appendChild(input);
+            innerContainer.appendChild(label);
+
+            var container = document.getElementById("inputForm");
+            container.appendChild(innerContainer);
+
+            console.log("created input with Id:", i);
+            i++;
+        }
         function SubmitData() {
             let symptomsarray = [];
-            var symptom_1 = document.getElementById("Symptoms_1").value;
-            var symptom_2 = document.getElementById("Symptoms_2").value;
-            var symptom_3 = document.getElementById("Symptoms_3").value;
-            var symptom_4 = document.getElementById("Symptoms_4").value;
-
-            //    console.log(symptom_2);
-            i = 0;
-            if (symptom_1.length != 0) {
-                symptomsarray[i] = symptom_1;
-                i++;
-            }
-            if (symptom_2.length != 0) {
-                symptomsarray[i] = symptom_2;
-                i++;
-            }
-            if (symptom_3.length != 0) {
-                symptomsarray[i] = symptom_3;
-                i++;
-            }
-            if (symptom_4.length != 0) {
-                symptomsarray[i] = symptom_4;
-                i++;
-            }
-            console.log(symptomsarray);
-            const apicall = async () => {
-            const response = await fetch('https://web-production-aeed.up.railway.app/EnterSymptoms', {
-                method: 'POST',
-                body: JSON.stringify({
-                    user_symtoms: symptomsarray
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
+            let k = 0;
+            for (let j = 0; j < i; j++) {
+                var s = document.getElementById(j).value;
+                console.log("value of input:", s);
+                if (s.length != 0) {
+                    symptomsarray[k] = s;
+                    k++;
                 }
-            });
-            const myjson = await response.json();
-            console.log(response);
-        }
-        try {
-            apicall();
-        } catch {
-            console.log("Error in api call");
-        }
+            }
+            if (k != 0) {
+                console.log(symptomsarray);
+                const apicall = async () => {
+                    const response = await fetch('https://web-production-aeed.up.railway.app/EnterSymptoms', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            user_symtoms: symptomsarray
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    const myjson = await response.json();
+                    console.log(myjson);
+                    var testArray = ['cold', 'fever', 'headache', 'vomitting', 'red eyes'];
+
+                }
+
+
+                try {
+                    window.localStorage.setItem("user", JSON.stringify(symptomsarray));
+                    console.log(JSON.stringify(symptomsarray));
+                    console.log(JSON.parse(window.localStorage.getItem("user")));
+                    window.location.href = './check.html';
+                    // apicall();
+                } catch {
+                    console.log("Error in api call");
+                }
+            } else {
+                alert("Enter Atleast 1 symptom");
+            }
+
         }
         //creating api request
-        
-        
+
+
     </script>
 
 </body>

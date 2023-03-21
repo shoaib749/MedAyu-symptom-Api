@@ -14,7 +14,7 @@ nltk.download('wordnet')
 
 
     
-app = Flask(__name__,template_folder='template')
+app = Flask(__name__)
 
 model = pickle.load(open("model.pkl",'rb'))
 ##use of common files and variables for predection & symptoms
@@ -43,7 +43,7 @@ def synonyms(term):
 @app.route('/')
 def index():
     # return "Mini project MedAyu symptoms api: 1. /EnterSymptoms using POST Method & params:user_symtoms(Array) 2. /db using POST method with params:request 3. /disease Using POST method & params:syptoms "
-    return render_template('./templates/index.html')
+    return render_template('./index.html')
 
 @app.route('/disease', methods=['POST'])
 def classify():
