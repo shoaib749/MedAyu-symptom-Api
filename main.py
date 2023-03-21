@@ -49,12 +49,12 @@ def check():
     return render_template('check.html')
 
 @app.route('/coSymptoms.html/')
-def check():
+def co():
     return render_template('coSymptoms.html')
 
 
 @app.route('/result.html/')
-def check():
+def result():
     return render_template('result.html')
 
 @app.route('/disease', methods=['POST'])
