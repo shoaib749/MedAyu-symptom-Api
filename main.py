@@ -14,7 +14,7 @@ nltk.download('wordnet')
 
 
     
-app = Flask(__name__)
+app = Flask(__name__,template_folder='template')
 
 model = pickle.load(open("model.pkl",'rb'))
 ##use of common files and variables for predection & symptoms
