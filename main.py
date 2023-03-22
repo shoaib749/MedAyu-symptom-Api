@@ -45,6 +45,10 @@ def index():
     # return "Mini project MedAyu symptoms api: 1. /EnterSymptoms using POST Method & params:user_symtoms(Array) 2. /db using POST method with params:request 3. /disease Using POST method & params:syptoms "
     return render_template('index.html')
 
+@app.route('/index.html')
+def index_f():
+    return render_template('index.html')
+
 @app.route('/about.html')
 def about():
     return render_template('about.html')
