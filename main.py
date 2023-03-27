@@ -18,7 +18,9 @@ from nltk.tokenize import RegexpTokenizer
     
 app = Flask(__name__,template_folder='template')
 import nltk
-nltk.download('all')
+nltk.download('stopwords')
+nltk.download('WordNetLemmatizer')
+nltk.download('RegexpTokenizer')
 stop_words = stopwords.words('english')
 lemmatizer = WordNetLemmatizer()
 splitter = RegexpTokenizer(r'\w+')
@@ -167,7 +169,7 @@ def Enter():
     print(Symptoms)
     ##taking input is the thing after converting 
     processed_user_symptoms=[]
-    for sym in user_symptoms:
+    for sym in Symptoms:
         sym=sym.strip()
         sym=sym.replace('-',' ')
         sym=sym.replace("'",'')
