@@ -163,7 +163,7 @@ def classify():
 # # returns the list of synonyms of the input word from thesaurus.com (https://www.thesaurus.com/) and wordnet (https://www.nltk.org/howto/wordnet.html)
 # #testing new user_symptoms method
 def Enter():
-    Symptoms = str(request.form.get('user_symtoms')).lower.split(',')
+    Symptoms = str(request.form.get('user_symtoms')).lower().split(',')
     print(Symptoms)
     ##taking input is the thing after converting 
     processed_user_symptoms=[]
