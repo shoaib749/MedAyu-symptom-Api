@@ -12,7 +12,7 @@ from collections import Counter
 nltk.download('wordnet')
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-
+from nltk.tokenize import RegexpTokenizer
 
 
     
