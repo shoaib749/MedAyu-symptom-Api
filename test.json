@@ -1,6 +1,7 @@
 {
-    "syptoms" :[
-        "fever", "headache", "vomiting"
-
+    "syptoms": [
+        "fever",
+        "headache",
+        "vomiting"
     ]
 }
