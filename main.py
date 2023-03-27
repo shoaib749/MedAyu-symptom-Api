@@ -10,12 +10,20 @@ import nltk
 import operator
 from collections import Counter
 nltk.download('wordnet')
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import RegexpTokenizer
 
 
 
     
 app = Flask(__name__)
-
+import nltk
+nltk.download('stopwords')
+# utlities for pre-processing
+stop_words = stopwords.words('english')
+lemmatizer = WordNetLemmatizer()
+splitter = RegexpTokenizer(r'\w+')
 model = pickle.load(open("model.pkl",'rb'))
 ##use of common files and variables for predection & symptoms
 df_norm = pd.read_csv("dis_sym_dataset_norm.csv")
@@ -49,9 +57,7 @@ def classify():
     syptoms = request.form.getlist('syptoms')
     print(syptoms)
     
-    
     #added for testing: head
-    
     sample_x = [0 for x in range(0,len(dataset_symptoms))]
     for val in syptoms:
         sample_x[dataset_symptoms.index(val)]=1
@@ -88,18 +94,50 @@ def classify():
         j += 1
     result = json.dumps({'result':result_disease})
     
-    
-    
     #code end
     
-
-
-
-
     return result
 
 @app.route('/EnterSymptoms',methods=['POST'])
 def Enter():
+    Symptoms = str(request.form.get('user_symtoms')).lower().split(',')
+    print(Symptoms)
+    ##taking input is the thing after converting 
+    processed_user_symptoms=[]
+    for sym in Symptoms:
+        sym=sym.strip()
+        sym=sym.replace('-',' ')
+        sym=sym.replace("'",'')
+        sym = ' '.join([lemmatizer.lemmatize(word) for word in splitter.tokenize(sym)])
+    processed_user_symptoms.append(sym)
+
+    user_symptoms = []
+    for user_sym in processed_user_symptoms:
+        user_sym = user_sym.split()
+        str_sym = set()
+        for comb in range(1, len(user_sym)+1):
+            for subset in combinations(user_sym, comb):
+                subset=' '.join(subset)
+                subset = synonyms(subset) 
+                str_sym.update(subset)
+        str_sym.add(' '.join(user_sym))
+        user_symptoms.append(' '.join(str_sym).replace('_',' '))
+    # Loop over all the symptoms in dataset and check its similarity score to the synonym string of the user-input 
+    # symptoms. If similarity>0.5, add the symptom to the final list
+    found_symptoms = set()
+    for idx, data_sym in enumerate(dataset_symptoms):
+        data_sym_split=data_sym.split()
+        for user_sym in user_symptoms:
+            count=0
+            for symp in data_sym_split:
+                if symp in user_sym.split():
+                    count+=1
+            if count/len(data_sym_split)>0.5:
+                found_symptoms.add(data_sym)
+    found_symptoms = list(found_symptoms)
+    result = json.dumps({'result':found_symptoms})
+    return result
+# def Enter():
     Symptoms = request.form.getlist('user_symtoms')
     print(Symptoms)
     ##taking input is the thing after converting 
