@@ -173,7 +173,8 @@ def Enter():
 ##code starting for user selection me symptoms from the db
 @app.route('/db',methods=['POST'])
 def db():
-    symptoms = request.form.getlist('request')
+    symptoms = str(request.form.get('request')).lower().split(',')
+    print(symptoms)
     dis_list = set() 
     counter_list = []           
     for symp in symptoms:
