@@ -17,7 +17,8 @@ from nltk.stem import WordNetLemmatizer
 
     
 app = Flask(__name__,template_folder='template')
-
+import nltk
+nltk.download('all')
 stop_words = stopwords.words('english')
 lemmatizer = WordNetLemmatizer()
 splitter = RegexpTokenizer(r'\w+')
