@@ -272,7 +272,8 @@ def db():
     # Symptoms that co-occur with the ones selected by user              
     dict_symp = dict(Counter(counter_list))
     dict_symp_tup = sorted(dict_symp.items(), key=operator.itemgetter(1),reverse=True)   
-    # print(dict_symp_tup) 
+    print(counter_list)
+    print(dict_symp_tup) 
     result = json.dumps({'result':dict_symp_tup})
     return result
 
