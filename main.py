@@ -175,17 +175,17 @@ def Enter():
     print("uS:")
     print(Symptoms)
     ##taking input is the thing after converting 
-    processed_user_symptoms=[]
-    for sym in Symptoms:
-        sym=sym.strip()
-        sym=sym.replace('-',' ')
-        sym=sym.replace("'",'')
-        sym = ' '.join([lemmatizer.lemmatize(word) for word in splitter.tokenize(sym)])
-    processed_user_symptoms.append(sym)
-    print("pS:")
-    print(processed_user_symptoms)
+    # processed_user_symptoms=[]
+    # for sym in Symptoms:
+    #     sym=sym.strip()
+    #     sym=sym.replace('-',' ')
+    #     sym=sym.replace("'",'')
+    #     sym = ' '.join([lemmatizer.lemmatize(word) for word in splitter.tokenize(sym)])
+    # processed_user_symptoms.append(sym)
+    # print("pS:")
+    # print(processed_user_symptoms)
     user_symptoms = []
-    for user_sym in processed_user_symptoms:
+    for user_sym in Symptoms:
         user_sym = user_sym.split()
         str_sym = set()
         for comb in range(1, len(user_sym)+1):
