@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from flask import Flask,request,jsonify
+from flask import Flask,request,jsonify,render_template
 import pickle
 import pandas as pd
 import json
@@ -24,6 +24,15 @@ nltk.download('stopwords')
 stop_words = stopwords.words('english')
 lemmatizer = WordNetLemmatizer()
 splitter = RegexpTokenizer(r'\w+')
+app = Flask(__name__,template_folder='template')
+import nltk
+nltk.download('stopwords')
+nltk.download('WordNetLemmatizer')
+nltk.download('RegexpTokenizer')
+stop_words = stopwords.words('english')
+lemmatizer = WordNetLemmatizer()
+splitter = RegexpTokenizer(r'\w+')
+
 model = pickle.load(open("model.pkl",'rb'))
 ##use of common files and variables for predection & symptoms
 df_norm = pd.read_csv("dis_sym_dataset_norm.csv")
@@ -50,7 +59,37 @@ def synonyms(term):
 
 @app.route('/')
 def index():
-    return "Mini project MedAyu symptoms api: 1. /EnterSymptoms using POST Method & params:user_symtoms(Array) 2. /db using POST method with params:request 3. /disease Using POST method & params:syptoms "
+    # return "Mini project MedAyu symptoms api: 1. /EnterSymptoms using POST Method & params:user_symtoms(Array) 2. /db using POST method with params:request 3. /disease Using POST method & params:syptoms "
+    return render_template('index.html')
+
+@app.route('/index.html')
+def index_f():
+    return render_template('index.html')
+
+@app.route('/about.html')
+def about():
+    return render_template('about.html')
+
+@app.route('/api.html')
+def api():
+    return render_template('api.html')
+
+@app.route('/contact.html')
+def contact():
+    return render_template('contact.html')
+
+@app.route('/check.html/')
+def check():
+    return render_template('check.html')
+
+@app.route('/check.html/coSymptoms.html/')
+def co():
+    return render_template('coSymptoms.html')
+
+
+@app.route('/check.html/coSymptoms.html/result.html/')
+def result():
+    return render_template('result.html')
 
 @app.route('/disease', methods=['POST'])
 def classify():
@@ -99,6 +138,38 @@ def classify():
     return result
 
 @app.route('/EnterSymptoms',methods=['POST'])
+# def Enter():
+#     Symptoms = request.form.getlist('user_symtoms')
+#     print(Symptoms)
+#     ##taking input is the thing after converting 
+#     user_symptoms = []
+#     for user_sym in Symptoms:
+#         user_sym = user_sym.split()
+#         str_sym = set()
+#         for comb in range(1, len(user_sym)+1):
+#             for subset in combinations(user_sym, comb):
+#                 subset=' '.join(subset)
+#                 subset = synonyms(subset) 
+#                 str_sym.update(subset)
+#         str_sym.add(' '.join(user_sym))
+#         user_symptoms.append(' '.join(str_sym).replace('_',' '))
+#     # Loop over all the symptoms in dataset and check its similarity score to the synonym string of the user-input 
+#     # symptoms. If similarity>0.5, add the symptom to the final list
+#     found_symptoms = set()
+#     for idx, data_sym in enumerate(dataset_symptoms):
+#         data_sym_split=data_sym.split()
+#         for user_sym in user_symptoms:
+#             count=0
+#             for symp in data_sym_split:
+#                 if symp in user_sym.split():
+#                     count+=1
+#             if count/len(data_sym_split)>0.5:
+#                 found_symptoms.add(data_sym)
+#     found_symptoms = list(found_symptoms)
+#     result = json.dumps({'result':found_symptoms})
+#     return result
+# # returns the list of synonyms of the input word from thesaurus.com (https://www.thesaurus.com/) and wordnet (https://www.nltk.org/howto/wordnet.html)
+# #testing new user_symptoms method
 def Enter():
     Symptoms = str(request.form.get('user_symtoms')).lower().split(',')
     print(Symptoms)
@@ -141,8 +212,16 @@ def Enter():
     Symptoms = request.form.getlist('user_symtoms')
     print(Symptoms)
     ##taking input is the thing after converting 
+    processed_user_symptoms=[]
+    for sym in Symptoms:
+        sym=sym.strip()
+        sym=sym.replace('-',' ')
+        sym=sym.replace("'",'')
+        sym = ' '.join([lemmatizer.lemmatize(word) for word in splitter.tokenize(sym)])
+    processed_user_symptoms.append(sym)
+
     user_symptoms = []
-    for user_sym in Symptoms:
+    for user_sym in processed_user_symptoms:
         user_sym = user_sym.split()
         str_sym = set()
         for comb in range(1, len(user_sym)+1):
@@ -167,8 +246,6 @@ def Enter():
     found_symptoms = list(found_symptoms)
     result = json.dumps({'result':found_symptoms})
     return result
-# returns the list of synonyms of the input word from thesaurus.com (https://www.thesaurus.com/) and wordnet (https://www.nltk.org/howto/wordnet.html)
-
 
 ##code starting for user selection me symptoms from the db
 @app.route('/db',methods=['POST'])
@@ -198,3 +275,5 @@ def db():
 if __name__ == '__main__':
     print("Working")
     app.run(debug=True,host="0.0.0.0")
+
+#test

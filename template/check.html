@@ -42,9 +42,7 @@ background-size: cover; background-repeat: no-repeat;">
                         <li class="nav-item">
                             <a class="nav-link " href="./contact.html">FAQs</a>
                         </li>
-                            </ul>
-                        </li>
-                       
+                        
                     </ul>
                     <form class="d-flex">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -57,11 +55,25 @@ background-size: cover; background-repeat: no-repeat;">
     <!-- Header  -->
 
     <div class="container p-3 display-flex shadow p-3 mb-5 bg-body rounded"
-        style="height: auto; width: 50vw; margin-top: 60px; opacity: 0.8; ">
+        style="height: auto; width: 50vw; margin-top: 60px; opacity: 0.8;">
         <div class="container">
-            <h4>Select Co-Occuring Symptoms</h4>
+            <h4>Confirm Symptoms</h4>
         </div>
         <div id="container" class="container mb-5 p-3">
+
+            <!-- <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                <label class="form-check-label" for="flexCheckChecked">
+                    Checked checkbox
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Default checkbox
+                </label>
+
+            </div> -->
         </div>
         <div class="d-grid gap-2 col-6 mx-auto" style="margin-top: 125px;">
             <button class="btn btn-success" type="button" value="submit" onclick="SubmitData()">Submit</button>
@@ -94,12 +106,11 @@ background-size: cover; background-repeat: no-repeat;">
         </ul>
     </footer>
     <!-- footer end -->
+
     <!-- start of script -->
     <script>
         // var testArray = ['cold', 'fever', 'headache', 'vomitting', 'red eyes'];
-        var testArray = JSON.parse(window.localStorage.getItem("check"));
-        // console.log("array")
-        // console.log();
+        var testArray = JSON.parse(window.localStorage.getItem("user"));
         console.log(testArray);
         testArray.forEach(element => {
             console.log(element);
@@ -124,8 +135,9 @@ background-size: cover; background-repeat: no-repeat;">
 
             var container = document.getElementById('container');
             container.appendChild(innercontainer);
-
         });
+
+
         function SubmitData() {
             var symptomsarray = [];
             var i = 0;
@@ -138,9 +150,9 @@ background-size: cover; background-repeat: no-repeat;">
             });
             if (i != 0) {
                 console.log("cehcked data " + symptomsarray);
-                window.localStorage.setItem("co", JSON.stringify(symptomsarray));
+                window.localStorage.setItem("check", JSON.stringify(symptomsarray));
                 console.log("this is local data stored")
-                console.log(window.localStorage.getItem("co"));
+                console.log(window.localStorage.getItem("check"));
                 const apiCall = async () => {
                     const response = await fetch('https://web-production-aeed.up.railway.app/db', {
                         method: 'POST',
@@ -154,23 +166,22 @@ background-size: cover; background-repeat: no-repeat;">
                     const myjson = await response.json();
                     console.log("Data from Api");
                     console.log(myjson);
-                    window.localStorage.setItem("db", JSON.stringify(myjson));
+                    window.localStorage.setItem("db", myjson);
                 }
+
                 try {
                     apiCall();
-                    window.location.href = './result.html';
+                    window.location.href = './coSymptoms.html';
                 } catch {
                     console.log("Error in api call");
                 }
-
             } else {
-                alert("Select atleast 1 co-occuring symptoms");
+                alert("Select atleaset 1 symptoms");
             }
 
 
+            // window.location.href = './coSymptoms.html';
         }
-
-        // console.log(window.localStorage.getItem("apiSymptoms"));
     </script>
     <!-- end of script -->
 </body>
