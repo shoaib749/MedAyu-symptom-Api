@@ -132,7 +132,7 @@ def classify():
         result_disease = dict(No=j,disease=diseases[key])
         topk_index_mapping[j] = key
         j += 1
-    print(topk_sorted[1])
+    # print(topk_sorted[1])
     result = json.dumps({'result':result_disease})
     #code end
     return result
