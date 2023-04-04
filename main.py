@@ -172,7 +172,8 @@ def classify():
 # #testing new user_symptoms method
 def Enter():
     Symptoms = str(request.form.get('user_symtoms')).lower().split(',')
-    print("user:"+Symptoms)
+    print("uS:")
+    print(Symptoms)
     ##taking input is the thing after converting 
     processed_user_symptoms=[]
     for sym in Symptoms:
@@ -181,7 +182,8 @@ def Enter():
         sym=sym.replace("'",'')
         sym = ' '.join([lemmatizer.lemmatize(word) for word in splitter.tokenize(sym)])
     processed_user_symptoms.append(sym)
-    print("cS:"+processed_user_symptoms)
+    print("pS:")
+    print(processed_user_symptoms)
     user_symptoms = []
     for user_sym in processed_user_symptoms:
         user_sym = user_sym.split()
@@ -193,7 +195,8 @@ def Enter():
                 str_sym.update(subset)
         str_sym.add(' '.join(user_sym))
         user_symptoms.append(' '.join(str_sym).replace('_',' '))
-        print("pS:"+user_symptoms)
+        print("cS:")
+        print(user_symptoms)
     # Loop over all the symptoms in dataset and check its similarity score to the synonym string of the user-input 
     # symptoms. If similarity>0.5, add the symptom to the final list
     found_symptoms = set()
@@ -207,7 +210,8 @@ def Enter():
             if count/len(data_sym_split)>0.5:
                 found_symptoms.add(data_sym)
     found_symptoms = list(found_symptoms)
-    print("pS:"+found_symptoms)
+    print("fS:")
+    print(found_symptoms)
     result = json.dumps({'result':found_symptoms})
     return result
 # def Enter():
