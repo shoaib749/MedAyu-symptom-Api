@@ -129,7 +129,7 @@ def classify():
     for key in topk_sorted:
         prob = topk_sorted[key]*100
         print(str(j) + " Disease name:",diseases[key], "\tProbability:",str(round(prob, 2))+"%")
-        result_disease = diseases[key]
+        result_disease.append(diseases[key])  
         topk_index_mapping[j] = key
         j += 1
     # print(topk_sorted[1])
