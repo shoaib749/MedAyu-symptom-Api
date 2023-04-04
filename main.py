@@ -107,7 +107,7 @@ def classify():
     diseases = list(set(Y['label_dis']))
     diseases.sort()
     topk = predicted_disease[0].argsort()[-k:][::-1]
-    print(topk[0])
+    print(topk)
     #code for disease name: head
     topk_dict = {}
     # Show top 10 highly probable disease to the user.
@@ -125,14 +125,15 @@ def classify():
     j = 0
     topk_index_mapping = {}
     topk_sorted = dict(sorted(topk_dict.items(), key=lambda kv: kv[1], reverse=True))
-    result_disease ={}
+    result_disease =[]
     for key in topk_sorted:
         prob = topk_sorted[key]*100
         print(str(j) + " Disease name:",diseases[key], "\tProbability:",str(round(prob, 2))+"%")
-        result_disease = dict(No=j+1,disease=diseases[key])
+        result_disease = diseases[key]
         topk_index_mapping[j] = key
         j += 1
     # print(topk_sorted[1])
+    print(result_disease)
     result = json.dumps({'result':result_disease})
     #code end
     return result
