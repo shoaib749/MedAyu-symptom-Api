@@ -274,7 +274,12 @@ def db():
     dict_symp_tup = sorted(dict_symp.items(), key=operator.itemgetter(1),reverse=True)   
     print(counter_list)
     print(dict_symp_tup) 
-    result = json.dumps({'result':dict_symp_tup})
+    #code for taking online disease name
+    co_symps = []
+    for dis in dict_symp_tup:
+        co_symps.append(dis[0])
+    print(co_symps)
+    result = json.dumps({'result':co_symps})
     return result
 
 
