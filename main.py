@@ -93,7 +93,8 @@ def result():
 
 @app.route('/disease', methods=['POST'])
 def classify():
-    syptoms = request.form.getlist('syptoms')
+    # syptoms = request.form.getlist('syptoms')
+    syptoms = str(request.form.get('syptoms')).lower().split(',')
     print(syptoms)
     
     #added for testing: head
@@ -132,44 +133,11 @@ def classify():
         topk_index_mapping[j] = key
         j += 1
     result = json.dumps({'result':result_disease})
-    
     #code end
-    
     return result
 
 @app.route('/EnterSymptoms',methods=['POST'])
-# def Enter():
-#     Symptoms = request.form.getlist('user_symtoms')
-#     print(Symptoms)
-#     ##taking input is the thing after converting 
-#     user_symptoms = []
-#     for user_sym in Symptoms:
-#         user_sym = user_sym.split()
-#         str_sym = set()
-#         for comb in range(1, len(user_sym)+1):
-#             for subset in combinations(user_sym, comb):
-#                 subset=' '.join(subset)
-#                 subset = synonyms(subset) 
-#                 str_sym.update(subset)
-#         str_sym.add(' '.join(user_sym))
-#         user_symptoms.append(' '.join(str_sym).replace('_',' '))
-#     # Loop over all the symptoms in dataset and check its similarity score to the synonym string of the user-input 
-#     # symptoms. If similarity>0.5, add the symptom to the final list
-#     found_symptoms = set()
-#     for idx, data_sym in enumerate(dataset_symptoms):
-#         data_sym_split=data_sym.split()
-#         for user_sym in user_symptoms:
-#             count=0
-#             for symp in data_sym_split:
-#                 if symp in user_sym.split():
-#                     count+=1
-#             if count/len(data_sym_split)>0.5:
-#                 found_symptoms.add(data_sym)
-#     found_symptoms = list(found_symptoms)
-#     result = json.dumps({'result':found_symptoms})
-#     return result
-# # returns the list of synonyms of the input word from thesaurus.com (https://www.thesaurus.com/) and wordnet (https://www.nltk.org/howto/wordnet.html)
-# #testing new user_symptoms method
+
 def Enter():
     Symptoms = str(request.form.get('user_symtoms')).lower().split(',')
     print("uS:")
@@ -212,44 +180,6 @@ def Enter():
     found_symptoms = list(found_symptoms)
     print("fS:")
     print(found_symptoms)
-    result = json.dumps({'result':found_symptoms})
-    return result
-# def Enter():
-    Symptoms = request.form.getlist('user_symtoms')
-    print(Symptoms)
-    ##taking input is the thing after converting 
-    processed_user_symptoms=[]
-    for sym in Symptoms:
-        sym=sym.strip()
-        sym=sym.replace('-',' ')
-        sym=sym.replace("'",'')
-        sym = ' '.join([lemmatizer.lemmatize(word) for word in splitter.tokenize(sym)])
-    processed_user_symptoms.append(sym)
-
-    user_symptoms = []
-    for user_sym in processed_user_symptoms:
-        user_sym = user_sym.split()
-        str_sym = set()
-        for comb in range(1, len(user_sym)+1):
-            for subset in combinations(user_sym, comb):
-                subset=' '.join(subset)
-                subset = synonyms(subset) 
-                str_sym.update(subset)
-        str_sym.add(' '.join(user_sym))
-        user_symptoms.append(' '.join(str_sym).replace('_',' '))
-    # Loop over all the symptoms in dataset and check its similarity score to the synonym string of the user-input 
-    # symptoms. If similarity>0.5, add the symptom to the final list
-    found_symptoms = set()
-    for idx, data_sym in enumerate(dataset_symptoms):
-        data_sym_split=data_sym.split()
-        for user_sym in user_symptoms:
-            count=0
-            for symp in data_sym_split:
-                if symp in user_sym.split():
-                    count+=1
-            if count/len(data_sym_split)>0.5:
-                found_symptoms.add(data_sym)
-    found_symptoms = list(found_symptoms)
     result = json.dumps({'result':found_symptoms})
     return result
 
