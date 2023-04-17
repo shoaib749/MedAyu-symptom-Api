@@ -33,7 +33,7 @@ stop_words = stopwords.words('english')
 lemmatizer = WordNetLemmatizer()
 splitter = RegexpTokenizer(r'\w+')
 
-model = pickle.load(open("model_added",'rb'))
+model = pickle.load(open("model_added.pkl",'rb'))
 ##use of common files and variables for predection & symptoms
 df_norm = pd.read_csv("dis_sym_dataset_norm.csv")
 Y = df_norm.iloc[:, 0:1]
