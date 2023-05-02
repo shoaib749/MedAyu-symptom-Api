@@ -14,8 +14,6 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer
 
-
-
     
 app = Flask(__name__)
 import nltk
